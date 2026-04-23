@@ -639,6 +639,10 @@
                 ><span class="sg-val" id="t-catering">-</span>
               </div>
               <div class="sg-cell">
+                <span class="sg-label">Other Charges</span
+                ><span class="sg-val" id="t-other">-</span>
+              </div>
+              <div class="sg-cell">
                 <span class="sg-label">Tax</span
                 ><span class="sg-val" id="t-tax">-</span>
               </div>
@@ -733,6 +737,10 @@
             <td class="amt" id="pdf-catering"></td>
           </tr>
           <tr>
+            <td class="item">Other Charges</td>
+            <td class="amt" id="pdf-other"></td>
+          </tr>
+          <tr>
             <td class="item">Tax</td>
             <td class="amt" id="pdf-tax"></td>
           </tr>
@@ -794,74 +802,106 @@
 
     <script>
       const ROOM_CODES = new Set([
-        "1050",
-        "1050B",
-        "2390",
-        "2390B",
-        "1051",
-        "1052",
-        "1053",
-        "1054",
-        "1055",
-        "1100",
-        "1103",
+        "1000","1000A","1000B",
+        "1010","1010A","1010B",
+        "1020","1020A","1020B",
+        "1050","1050A","1050B",
+        "1105","1105A","1105B",
+        "1115","1115A","1115B",
+        "1130","1130A","1130B",
       ]);
-      const PARKING_CODES = new Set(["1200", "1201", "1202", "1203"]);
+      const PARKING_CODES = new Set([
+        "1200","1200A","1200B",
+        "1201","1201A","1201B",
+        "1202","1202A",
+        "1203","1203A",
+      ]);
       const CATERING_CODES = new Set([
-        "2300",
-        "2301",
-        "2302",
-        "2303",
-        "2304",
-        "2305",
-        "2306",
-        "2307",
-        "2308",
-        "2309",
-        "2310",
-        "2391",
-        "2392",
-        "2393",
-        "2394",
-        "2395",
-        "2400",
-        "2401",
-        "2402",
-        "2403",
-        "2404",
-        "2405",
-        "2406",
-        "2407",
-        "2408",
-        "2409",
-        "2410",
-        "2411",
-        "2412",
-        "2413",
-        "2414",
-        "2415",
-        "2500",
-        "2501",
-        "2502",
-        "2550",
-        "2551",
-        "2552",
+        // Food and Beverage Revenue
+        "2000","2000A","2001","2001A","2002","2002A",
+        "2010","2010A","2011","2011A","2012","2012A",
+        "2020","2020A","2030","2030A","2050",
+        "2100","2100A","2110","2110A","2120","2120A","2130","2130A","2150",
+        "2200","2200A","2201","2201A","2202","2202A","2203","2203A",
+        "2210","2210A","2211","2211A","2212","2212A",
+        "2220","2220A","2221","2221A","2250","2350",
+        "3000","3000A","3001","3001A","3002","3002A",
+        "3010","3010A","3050",
+        "3100","3100A","3101","3101A","3102","3102A","3110","3110A","3150",
+        // Meeting & Event Revenue
+        "2300","2300A","2300B","2301","2301A","2301B",
+        "2302","2302A","2302B","2303","2303A","2303B",
+        "2304","2304A","2304B","2305","2305A","2305B",
+        "2306","2306A","2306B","2307","2307A","2307B",
+        "2308","2308A","2308B","2309","2309A","2309B",
+        "2310","2310A","2310B","2311","2311A","2311B",
+        "2312","2312A","2312B","2313","2313A","2313B",
+        "2314","2314A","2314B","2315","2315A","2315B",
+        "2316","2316A","2316B","2317","2317A","2317B",
+        "2318","2318A","2318B","2319","2319A","2319B",
+        "2320","2320A","2320B","2321","2321A","2321B",
+        "2322","2322A","2322B","2323","2323A","2323B",
+        "2324","2324A","2324B",
+        "2400","2400A","2400B","2401","2401A","2401B",
+        "2402","2402A","2402B","2403","2403A","2403B",
+        "2404","2404A","2405","2405A","2406","2406A",
+        "2407","2407A","2408","2408A","2409","2409A",
+        "2410","2410A","2411","2411A","2412","2412A",
+        "2413","2413A","2413B","2414","2414A","2414B",
+        "2415","2415A","2415B","2416","2416A","2416B",
+        "2417","2417A","2417B","2418","2418A","2418B",
+        "2419","2419A","2419B","2420","2420A","2420B",
+        "2421","2421A","2421B","2422","2422A","2422B",
+        "2423","2423A","2423B","2424","2424A","2424B",
+        "2500","2500A","2550","2550A",
       ]);
-      const TAX_CODES = new Set(["7000", "7001", "7002", "7003"]);
+      const TAX_CODES = new Set([
+        "7000","7000A","7001","7001A","7002","7002A","7003","7003A",
+        "7010","7010A","7011","7011A","7012","7012A",
+        "7020","7020A","7021","7021A","7022","7022A",
+        "7030","7030A",
+        "7040","7040A","7041","7041A","7042","7042A",
+        "7050","7050A","7051","7051A","7052","7052A",
+        "7060","7060A","7061","7061A","7062","7062A",
+      ]);
+      const OTHER_CODES = new Set([
+        // Other (non-parking)
+        "1100","1100A","1100B","1101","1101A","1101B",
+        "1102","1102A","1102B","1103","1103A","1103B",
+        "1104","1104A","1104B","1107","1107A","1107B",
+        "1108","1108A","1108B","1111","1111A","1111B",
+        "2390","2390A","2391","2391A",
+        "6000A","6002","6003A",
+        "9300A","9300B","9303A",
+        "GCACT","GCREC","GCRED","GCREF",
+        // Incidentals
+        "1106","1106A","1106B","1109","1109A","1109B",
+        "1110","1110A","1110B",
+        "1300","1300A","1301","1301A","1301B",
+        "1302","1302A","1303","1303A","1303B",
+        "1304","1304A","1304B","1305","1305A","1305B",
+        "1306","1306A","1306B","1307","1307A",
+        "1308","1308A","1309","1309A",
+        "1311","1311A","1311B","1312","1312A","1320",
+        // Non Room Revenue Category 6
+        "1310","1310A",
+        "4000","4000A","4001","4002","4002A",
+        "4010","4010A","4011","4011A","4012","4012A",
+        "4020","4020A","4050",
+        "4100","4100A","4150",
+        "7100","7100A","7110","7110A","7111","7111A","7112","7112A",
+        "7120","7120A","7121","7121A","7122","7122A",
+        "7130","7130A","7131","7131A",
+        // Package Revenue
+        "1320A",
+      ]);
       const DEPOSIT_CODES = new Set(["DEPO", "DEPOSIT"]);
       const PAYMENT_CODES = new Set([
-        "9001",
-        "9002",
-        "9003",
-        "9004",
-        "9005",
-        "9006",
-        "9007",
-        "9008",
-        "9009",
-        "CASH",
-        "CHECK",
-        "WIRE",
+        "6000","6001","6003","8000",
+        "9000","9001","9002","9003","9004","9005","9006","9007","9008","9009",
+        "9010","9109","9110","9111","9112","9113",
+        "9200","9300","9303","9304",
+        "VOIDDB","CASH","CHECK","WIRE",
       ]);
 
       let parsed = null;
@@ -954,6 +994,7 @@
           parking = 0,
           catering = 0,
           tax = 0,
+          other = 0,
           deposits = 0,
           payments = 0;
         txns.forEach(function (t) {
@@ -961,6 +1002,7 @@
           else if (PARKING_CODES.has(t.code)) parking += t.amount;
           else if (CATERING_CODES.has(t.code)) catering += t.amount;
           else if (TAX_CODES.has(t.code)) tax += t.amount;
+          else if (OTHER_CODES.has(t.code)) other += t.amount;
           else if (DEPOSIT_CODES.has(t.code)) deposits += t.amount;
           else if (PAYMENT_CODES.has(t.code)) payments += t.amount;
         });
@@ -1027,6 +1069,7 @@
           parking: round2(parking),
           catering: round2(catering),
           tax: round2(tax),
+          other: round2(other),
           deposits: round2(deposits),
           payments: round2(payments),
           eventRows: eventRows,
@@ -1094,7 +1137,7 @@
 
       function showPreview(d) {
         var tc = round2(
-          (d.rooms || 0) + (d.parking || 0) + (d.catering || 0) + (d.tax || 0),
+          (d.rooms || 0) + (d.parking || 0) + (d.catering || 0) + (d.other || 0) + (d.tax || 0),
         );
         var tp = round2((d.deposits || 0) + (d.payments || 0));
         document.getElementById("t-rooms").textContent = fmtPreview(
@@ -1105,6 +1148,9 @@
         );
         document.getElementById("t-catering").textContent = fmtPreview(
           d.catering || 0,
+        );
+        document.getElementById("t-other").textContent = fmtPreview(
+          d.other || 0,
         );
         document.getElementById("t-tax").textContent = fmtPreview(d.tax || 0);
         document.getElementById("t-deposits").textContent = fmtPreview(
@@ -1156,10 +1202,11 @@
           parking = parsed.parking || 0,
           catering = parsed.catering || 0;
         var tax = parsed.tax || 0,
+          other = parsed.other || 0,
           deposits = parsed.deposits || 0,
           payments = parsed.payments || 0;
         var eventRows = parsed.eventRows;
-        var totalCharges = round2(rooms + parking + catering + tax);
+        var totalCharges = round2(rooms + parking + catering + other + tax);
         var totalPayments = round2(deposits + payments);
         var balanceDue = round2(totalCharges + totalPayments);
         var today = new Date();
@@ -1178,6 +1225,7 @@
         document.getElementById("pdf-parking").textContent = fmtMoney(parking);
         document.getElementById("pdf-catering").textContent =
           fmtMoney(catering);
+        document.getElementById("pdf-other").textContent = fmtMoney(other);
         document.getElementById("pdf-tax").textContent = fmtMoney(tax);
         document.getElementById("pdf-total-charges").textContent =
           fmtMoney(totalCharges);
